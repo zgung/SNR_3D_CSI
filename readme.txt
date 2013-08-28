@@ -7,6 +7,11 @@ images measured in transversal plane.
        and a function called bf.m for baseline correction
        http://www.mathworks.com/matlabcentral/fileexchange/24916-baseline-fit
 
+       Another requirement is a ba_interp3 matlab function, that can be downloaded here:
+       http://www.mathworks.com/matlabcentral/fileexchange/21702-3d-volume-interpolation-with-bainterp3-fast-interp3-replacement
+       It needs to be compiled in matlab using gcc:
+       mex path/ba_interp3.cpp
+
  directory = '~/Patient_name/' - where is a directory called "Spec" with 
        a dicom 3D CSI file and a directory called "Dixon_1.0iso_PAT2_v2_W"
        for water DIXON images
