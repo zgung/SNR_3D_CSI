@@ -4,6 +4,8 @@ images measured in transversal plane.
  !!!!!!!!!!!!!!!!!! readme !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  for working you need my other function called read_ascconv_lenk.m 
        for reading parameters from the dicom
+       and a function called bf.m for baseline correction
+       http://www.mathworks.com/matlabcentral/fileexchange/24916-baseline-fit
 
  directory = '~/Patient_name/' - where is a directory called "Spec" with 
        a dicom 3D CSI file and a directory called "Dixon_1.0iso_PAT2_v2_W"
