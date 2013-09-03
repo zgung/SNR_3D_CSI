@@ -1,14 +1,14 @@
 % minarikova.lenka@gmail.com
 
-function [] = SNR_with_images(directory, cho_ppm, bdwtd, trnct, control,field)
+%function [] = SNR_with_images(directory, cho_ppm, bdwtd, trnct, control,field)
 
-% clear all;
-% directory = '~/Desktop/Current/Kozdera/';
-% cho_ppm = 3.33;
-% bdwtd = 50;
-% trnct = 0;
-% control = 0;
-% field = 3;
+ clear all;
+ directory = '~/Desktop/Current/Ivica2/01/';
+ cho_ppm = 3.21;
+ bdwtd = 50;
+ trnct = 0;
+ control = 0;
+ field = 3;
 
 % !!!!!!!!!!!!!!!!!! readme !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 % for working you need my other function called read_ascconv_lenk.m 
@@ -257,7 +257,6 @@ for z = bbox.slc_start:bbox.slc_end
         end
     end
 end
-
 %% treshold for all values:
 %reshape and add coordinates as are in siemens:
 c.pix_width = voxel.step_y * 2; % number of voxels in the pressbox - x axis
@@ -275,7 +274,6 @@ for k = 1:c.pix_depth
         end
     end
 end
-
 %% saving important things:
 % path = sprintf('Output_choSNR.txt');
 % fid_write = fopen(path,'w');
@@ -304,11 +302,9 @@ path = sprintf('Cho_bdwtd.txt');
 fid_write = fopen(path,'w');
 fprintf(fid_write,'%d\n',bdwtd);
 fclose(fid_write);
-
 dlmwrite('Output_choSNR_w_coor.txt', SNR.w_coor, 'delimiter', '\t', ...
          'precision', 6);
-     
-    
+
 %% The second part:
 % check coil elements:
 if field == 3 % anyway we are not measuring dixons on 7 T
@@ -351,6 +347,7 @@ end
 Acell = sortrows(Acell, 4); % Sort by first field "name"
 Acell = reshape(Acell', sz); % Put back into original cell array format
 slices = cell2struct(Acell, Afields, 1); % Convert to Struct
+clear Acell; clear Afields;
 %% determine CSI-in-press parameters:
 voxel.size_z = voxel.FoV_z / voxel.number_z; % the size of 1 voxel after zero filling in mm
 voxel.size_y = voxel.FoV_y / voxel.number_y;
@@ -419,7 +416,7 @@ if voxel.csi_slice_1 < 0
 end
 % cut the voxels-images only in Z direction:
 imgs{3,1} = imgs{2,1}(:,:,voxel.csi_slice_1:voxel.csi_slice_last); % remove the additional slices
-
+%%
 
 
 % look if the csi is rotated about an angle:
@@ -442,26 +439,32 @@ for ii = 1:numel(imgs{3,1}(1,1,:))
        'nearest','crop');
 end
 imgs_w = imgs{3,1};
-
-
-
 voxel.fov_cntr_x_rttd = numel(imgs{3,1}(1,:,1)) / 2 - (-voxel.fov_cntr_x) * cos(-voxel.angle) - ...
      (-voxel.fov_cntr_y) * sin(-voxel.angle) + 0;
 voxel.fov_cntr_y_rttd = numel(imgs{3,1}(:,1,1)) / 2 - (-voxel.fov_cntr_y) * cos(-voxel.angle) + ...
      (-voxel.fov_cntr_x) * sin(-voxel.angle) + 0;
+clear imgs;
+clear slices;
 shft_lr = 0;
 shft_ud = 0;
 voxel.fov_x1 = floor(voxel.fov_cntr_x_rttd - voxel.step_x * voxel.size_x + round(shft_lr * (voxel.FoV_x / voxel.notinterpfov_x))); % voxel values are beeing saved for psf_pics.m!
 voxel.fov_y1 = floor(voxel.fov_cntr_y_rttd - voxel.step_y * voxel.size_y + round(shft_ud * (voxel.FoV_y / voxel.notinterpfov_y)));
 
 
-% teraz by tu mala ist segmentacia, ale namiesto toho budes len citat
+%% teraz by tu mala ist segmentacia, ale namiesto toho budes len citat
 % obrazky na pozadie...
 
+clearvars -except directory cho_ppm bdwtd trnct control field nfo1 directory_spec voxel c SNR;
+%%
 cd(directory_spec);
 % import from simple text file, only amplitude data from jmrui text result
 % file named Output_choSNR.txt
 %fid = fopen('Output_choSNR.txt','r');
+load(strcat(nfo1.PatientName.FamilyName,'_voxel.mat'));
+load(strcat(nfo1.PatientName.FamilyName,'_density.mat'));
+load(strcat(nfo1.PatientName.FamilyName,'_imgs_w.mat'));
+load(strcat(nfo1.PatientName.FamilyName,'_density_wt_cor'));
+load(strcat(nfo1.PatientName.FamilyName,'_rtio'));
 mtrx1 = SNR.reshaped; %textscan(fid,'%f'); % this is right? not just '%f' ??
 %fclose(fid);
 aa = 0; % Z direction in siemens MRSI is opposite to image Z direction
