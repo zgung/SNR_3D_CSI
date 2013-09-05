@@ -1,14 +1,14 @@
 % minarikova.lenka@gmail.com
 
-%function [] = SNR_with_images(directory, cho_ppm, bdwtd, trnct, control,field)
+function [] = SNR_with_images(directory, cho_ppm, bdwtd, trnct, control,field)
 
- clear all;
- directory = '~/Desktop/Current/Ivica2/01/';
- cho_ppm = 3.21;
- bdwtd = 50;
- trnct = 0;
- control = 0;
- field = 3;
+% clear all;
+% directory = '~/Desktop/Current/Ivica2/01/';
+% cho_ppm = 3.21;
+% bdwtd = 50;
+% trnct = 0;
+% control = 0;
+% field = 3;
 
 % !!!!!!!!!!!!!!!!!! readme !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 % for working you need my other function called read_ascconv_lenk.m 
