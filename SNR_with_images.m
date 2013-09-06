@@ -3,12 +3,12 @@
 function [] = SNR_with_images(directory, cho_ppm, bdwtd, trnct, control,field)
 
 % clear all;
-% directory = '~/Desktop/Current/Ivica2/01/';
-% cho_ppm = 3.21;
-% bdwtd = 50;
-% trnct = 0;
-% control = 0;
-% field = 3;
+% directory = '~/Desktop/Current/Lenka/01/';
+%  cho_ppm = 3.21;
+%  bdwtd = 50;
+%  trnct = 0;
+%  control = 0;
+%  field = 3;
 
 % !!!!!!!!!!!!!!!!!! readme !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 % for working you need my other function called read_ascconv_lenk.m 
@@ -454,17 +454,13 @@ voxel.fov_y1 = floor(voxel.fov_cntr_y_rttd - voxel.step_y * voxel.size_y + round
 %% teraz by tu mala ist segmentacia, ale namiesto toho budes len citat
 % obrazky na pozadie...
 
-clearvars -except directory cho_ppm bdwtd trnct control field nfo1 directory_spec voxel c SNR;
+clearvars -except directory cho_ppm bdwtd trnct control field nfo1 directory_spec voxel c SNR imgs_w;
 %%
 cd(directory_spec);
 % import from simple text file, only amplitude data from jmrui text result
 % file named Output_choSNR.txt
 %fid = fopen('Output_choSNR.txt','r');
-load(strcat(nfo1.PatientName.FamilyName,'_voxel.mat'));
-load(strcat(nfo1.PatientName.FamilyName,'_density.mat'));
-load(strcat(nfo1.PatientName.FamilyName,'_imgs_w.mat'));
-load(strcat(nfo1.PatientName.FamilyName,'_density_wt_cor'));
-load(strcat(nfo1.PatientName.FamilyName,'_rtio'));
+
 mtrx1 = SNR.reshaped; %textscan(fid,'%f'); % this is right? not just '%f' ??
 %fclose(fid);
 aa = 0; % Z direction in siemens MRSI is opposite to image Z direction

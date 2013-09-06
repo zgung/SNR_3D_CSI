@@ -30,8 +30,8 @@ for aaa = 1:length(patient)
 
     voxel = read_ascconv_lenk(patient(aaa).name); % read parrameter from ascii part of the dicom
     nfo1 = dicominfo(patient(aaa).name); %read parameters from dicom header
-    mkdir('Output',strcat(nfo1.PatientName.FamilyName),'_',strcat(nfo1.PatientName.GivenName));
-    outdir = strcat(directory,'Output/',strcat(nfo1.PatientName.FamilyName),'/');
+    mkdir('Output',strcat(nfo1.PatientName.FamilyName,'_',nfo1.PatientName.GivenName));
+    outdir = strcat(directory,'Output/',strcat(nfo1.PatientName.FamilyName,'_',nfo1.PatientName.GivenName),'/');
     voxel.size_z = voxel.FoV_z / voxel.number_z; % the size of 1 voxel after zero filling in mm
     voxel.size_y = voxel.FoV_y / voxel.number_y;
     voxel.size_x = voxel.FoV_x / voxel.number_x;
@@ -101,19 +101,21 @@ for aaa = 1:length(patient)
     for z=tende:-1:tstart % read the z direction in the oposite way
         for y=rstart:rende
             for x=cstart:cende
-                f(x,y,z,:) = mag_data(x,y,z,:);
+                
+                    f(x,y,z,:) = mag_data(x,y,z,:);
+                
                 mat=squeeze(f(x,y,z,:));
                 %t=[x;y;z];
                 filename = sprintf('/%02d_%02d_%02d.txt',x,y,z);
                 fi=strcat(outdir,filename);
                 fid = fopen(fi,'w+');
                 zeroPh=-125.;
-                fprintf(fid, 'SamplingInterval: %1.2f\n', samInt );
-                fprintf(fid, 'TransmitterFrequency: %d\n',freq);
+                fprintf(fid,'SamplingInterval: %1.2f\n',samInt);
+                fprintf(fid,'TransmitterFrequency: %d\n',freq);
                 %fprintf(fid, 'ZeroOrderPhase: \n', zeroPh );
-                fprintf(fid, 'MagneticField: 3T\n');
-                fprintf(fid, 'TypeOfNucleus: 1H\n');
-                fprintf(fid, 'NameOfPatient: %s\n', pat_name);
+                fprintf(fid,'MagneticField: 3T\n');
+                fprintf(fid,'TypeOfNucleus: 1H\n');
+                fprintf(fid,'NameOfPatient: %s\n',pat_name);
                 
                 fu=[real(mat)'; imag(mat)'];
                 fprintf(fid, '%d %d\n', fu);
