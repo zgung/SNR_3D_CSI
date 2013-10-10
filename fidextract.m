@@ -10,6 +10,8 @@ function [] = fidextract(directory)
 % the script will make a new folder inthere, named "Output"
 % with the appropriate txt files with single spectra for jmrui
 
+%clear all;
+%directory = '~/Desktop/Current/Input/';
 
 cd(directory);
 disp(strcat('Processing:',directory));
@@ -25,12 +27,24 @@ for k = length(patient):-1:1 % find .IMA file
         patient(k) = [];
     end
 end
+fold_n = 1;
 
 for aaa = 1:length(patient)
 
     voxel = read_ascconv_lenk(patient(aaa).name); % read parrameter from ascii part of the dicom
     nfo1 = dicominfo(patient(aaa).name); %read parameters from dicom header
-    mkdir('Output',strcat(nfo1.PatientName.FamilyName,'_',nfo1.PatientName.GivenName));
+    if isfield(nfo1.PatientName,'GivenName') == 0
+        nfo1.PatientName.GivenName = strcat('noname');
+    end
+    fn = fullfile('Output',strcat(nfo1.PatientName.FamilyName,'_',nfo1.PatientName.GivenName));
+    if exist(fn, 'dir')
+        warning(.... creating a new folder);
+        mkdir('Output',strcat(nfo1.PatientName.FamilyName,'_',nfo1.PatientName.GivenName,'_',fold_n));
+        fold_n = fold_n + 1;
+    else
+        mkdir(fn)
+    end
+
     outdir = strcat(directory,'Output/',strcat(nfo1.PatientName.FamilyName,'_',nfo1.PatientName.GivenName),'/');
     voxel.size_z = voxel.FoV_z / voxel.number_z; % the size of 1 voxel after zero filling in mm
     voxel.size_y = voxel.FoV_y / voxel.number_y;
@@ -54,15 +68,15 @@ for aaa = 1:length(patient)
     COL_P= (voxel.number_x / 2 - fix((voxel.FoV_x - voxel.p_fov_x) / 2 / voxel.size_x) - 1) * 2; %include only voxels inside the PRESS box
     ROW_P = (voxel.number_y / 2 - fix((voxel.FoV_y - voxel.p_fov_y) / 2 / voxel.size_y) - 1) * 2;
     THK_P = (voxel.number_z / 2 - fix((voxel.FoV_z - voxel.p_fov_z) / 2 / voxel.size_z) - 1) * 2;
-    
+
     %%
     fid = fopen(dicomdir,'r');
-    
+
     fseek(fid, -((vecSize*ROW*COL*THK*2*4)), 'eof');
     Imag = fread(fid,'float32');
     fclose(fid);
-    
-   
+
+
     %%
     a=Imag(1:2:end);
     b=Imag(2:2:end);
@@ -97,13 +111,13 @@ for aaa = 1:length(patient)
     tende = THK/2+THK_P/2;
     disp('Percentage');
     %%
-    
+
     for z=tende:-1:tstart % read the z direction in the oposite way
         for y=rstart:rende
             for x=cstart:cende
-                
+
                     f(x,y,z,:) = mag_data(x,y,z,:);
-                
+
                 mat=squeeze(f(x,y,z,:));
                 %t=[x;y;z];
                 filename = sprintf('/%02d_%02d_%02d.txt',x,y,z);
@@ -116,7 +130,7 @@ for aaa = 1:length(patient)
                 fprintf(fid,'MagneticField: 3T\n');
                 fprintf(fid,'TypeOfNucleus: 1H\n');
                 fprintf(fid,'NameOfPatient: %s\n',pat_name);
-                
+
                 fu=[real(mat)'; imag(mat)'];
                 fprintf(fid, '%d %d\n', fu);
                 fclose(fid);
@@ -128,10 +142,9 @@ for aaa = 1:length(patient)
                 h=h+1;
             end
             percent=h/(COL*THK*ROW)*100;
-            
+
             per=sprintf('%d',round(percent));
         end
-        disp(per); 
+        disp(per);
     end
 end
-    
