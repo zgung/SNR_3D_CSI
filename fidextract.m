@@ -27,8 +27,8 @@ for k = length(patient):-1:1 % find .IMA file
         patient(k) = [];
     end
 end
-fold_n = 1;
 
+fold_n = 2;
 for aaa = 1:length(patient)
 
     voxel = read_ascconv_lenk(patient(aaa).name); % read parrameter from ascii part of the dicom
@@ -38,8 +38,8 @@ for aaa = 1:length(patient)
     end
     fn = fullfile('Output',strcat(nfo1.PatientName.FamilyName,'_',nfo1.PatientName.GivenName));
     if exist(fn, 'dir')
-        warning(.... creating a new folder);
-        mkdir('Output',strcat(nfo1.PatientName.FamilyName,'_',nfo1.PatientName.GivenName,'_',fold_n));
+        display(strcat('Creating a new folder for this patient: ',nfo1.PatientName.FamilyName));
+        mkdir('Output',strcat(nfo1.PatientName.FamilyName,'_',nfo1.PatientName.GivenName,'_',num2str(fold_n)));
         fold_n = fold_n + 1;
     else
         mkdir(fn)
