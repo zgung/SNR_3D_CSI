@@ -39,13 +39,14 @@ for aaa = 1:length(patient)
     fn = fullfile('Output',strcat(nfo1.PatientName.FamilyName,'_',nfo1.PatientName.GivenName));
     if exist(fn, 'dir')
         display(strcat('Creating a new folder for this patient: ',nfo1.PatientName.FamilyName));
-        mkdir('Output',strcat(nfo1.PatientName.FamilyName,'_',nfo1.PatientName.GivenName,'_',num2str(fold_n)));
+        fn = fullfile('Output',strcat(nfo1.PatientName.FamilyName,'_',nfo1.PatientName.GivenName,'_',num2str(fold_n)))
+        mkdir(fn);
         fold_n = fold_n + 1;
     else
         mkdir(fn)
     end
 
-    outdir = strcat(directory,'Output/',strcat(nfo1.PatientName.FamilyName,'_',nfo1.PatientName.GivenName),'/');
+    outdir = strcat(directory,fn);
     voxel.size_z = voxel.FoV_z / voxel.number_z; % the size of 1 voxel after zero filling in mm
     voxel.size_y = voxel.FoV_y / voxel.number_y;
     voxel.size_x = voxel.FoV_x / voxel.number_x;
